@@ -9,9 +9,10 @@ void displaySnake(int row, int coln, int board[row][coln]);
 void initBoardDirection(int row, int coln, int board[row][coln], int direction[row][coln]);
 void updateSnake(int row, int coln, int board[row][coln], int direction[row][coln]);
 void updateDirection(int row, int coln, int board[row][coln], int direction[row][coln], int updateDir);
+int checkDead(int row, int coln, int board[row][coln], int direction[row][coln]);
 
 int main(){
-    int row, coln, ch;
+    int row, coln, ch, isDead = 0;
     srand(time(NULL));
     initscr();
     getmaxyx(stdscr, row, coln);
@@ -52,6 +53,13 @@ int main(){
                     break;
             }
         }
+        isDead = checkDead(row, coln, board, direction);
+        if (isDead){
+            clear();
+            printw("You dead bro");
+            refresh();
+            while (1) {};
+        }
         updateSnake(row, coln, board, direction);
         displaySnake(row, coln, board);
         refresh();
@@ -59,6 +67,50 @@ int main(){
     getch();
     endwin();
 
+    return 0;
+}
+
+int checkDead(int row, int coln, int board[row][coln], int direction[row][coln]){
+    for (int i = 0; i < row; i++){
+        for (int j = 0; j < coln; j++){
+            if (board[i][j] == 1){
+                switch (direction[i][j]){
+                    case 1:
+                        if (j == coln-1){
+                            if (board[i][0] > 0) return 1;
+                        }
+                        else{
+                            if (board[i][j+1] > 0) return 1;
+                        }
+                        break;
+                    case 2:
+                        if (i == row-1){
+                            if (board[0][j] > 0) return 1;
+                        }
+                        else{
+                            if (board[i+1][j] > 0) return 1;
+                        }
+                        break;
+                    case 3:
+                        if (j == 0){
+                            if (board[i][coln-1] > 0) return 1;
+                        }
+                        else{
+                            if (board[i][j-1] > 0) return 1;
+                        }
+                        break;
+                    case 4:
+                        if (i == 0){
+                            if (board[row-1][j] > 0) return 1;
+                        }
+                        else{
+                            if (board[i-1][j] > 0) return 1;
+                        }
+                        break;
+                }
+            }
+        }
+    }
     return 0;
 }
 
@@ -177,6 +229,8 @@ void updateSnake(int row, int coln, int board[row][coln], int direction[row][col
             }
         }
     }
+
+    if (eatingApple) placeApple(row, coln, newBoard);
 
     for (int i = 0; i < row; i++){
         for (int j = 0; j < coln; j++){
