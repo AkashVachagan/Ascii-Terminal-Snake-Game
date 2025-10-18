@@ -35,6 +35,13 @@
    
    ```
 
+3. **Run the program** and enjoy snaking:
+     ```bash
+    
+    ./slither.exe
+    
+    ```
+
 
 ## Potential Enhancements
 
