@@ -47,6 +47,9 @@ int main(){
                 case KEY_UP:
                     updateDirection(row, coln, board, direction, 4);
                     break;
+                case 'p':  // remove later
+                    while (1) {};
+                    break;
             }
         }
         updateSnake(row, coln, board, direction);
@@ -72,6 +75,7 @@ void updateDirection(int row, int coln, int board[row][coln], int direction[row]
 
 void updateSnake(int row, int coln, int board[row][coln], int direction[row][coln]){
     int newBoard[row][coln];
+    int eatingApple = 0;
     for (int i = 0; i < row; i++){
         for (int j = 0; j < coln; j++){
             newBoard[i][j] = board[i][j];
@@ -84,40 +88,48 @@ void updateSnake(int row, int coln, int board[row][coln], int direction[row][col
                 switch(direction[i][j]){
                     case 1:
                         if (j == coln-1){
+                            eatingApple = (newBoard[i][0] == -1) ? 1 : 0;
                             newBoard[i][0] = 1;
                             direction[i][0] = 1;
                         }
                         else{
+                            eatingApple = (newBoard[i][j+1] == -1) ? 1 : 0;
                             newBoard[i][j+1] = 1;
                             direction[i][j+1] = 1;
                         }
                         break;
                     case 2:
                         if (i == row-1){
+                            eatingApple = (newBoard[0][j] == -1) ? 1 : 0;
                             newBoard[0][j] = 1;
                             direction[0][j] = 2;
                         }
                         else{
+                            eatingApple = (newBoard[i+1][j] == -1) ? 1 : 0;
                             newBoard[i+1][j] = 1;
                             direction[i+1][j] = 2;
                         }
                         break;
                     case 3:
                         if (j == 0){
+                            eatingApple = (newBoard[i][coln-1] == -1) ? 1 : 0;
                             newBoard[i][coln-1] = 1;
                             direction[i][coln-1] = 3;
                         }
                         else{
+                            eatingApple = (newBoard[i][j-1] == -1) ? 1 : 0;
                             newBoard[i][j-1] = 1;
                             direction[i][j-1] = 3;
                         }
                         break;
                     case 4:
                         if (i == 0){
+                            eatingApple = (newBoard[row-1][j] == -1) ? 1 : 0;
                             newBoard[row-1][j] = 1;
                             direction[row-1][j] = 4;
                         }
                         else{
+                            eatingApple = (newBoard[i-1][j] == -1) ? 1 : 0;
                             newBoard[i-1][j] = 1;
                             direction[i-1][j] = 4;
                         }
@@ -125,7 +137,7 @@ void updateSnake(int row, int coln, int board[row][coln], int direction[row][col
                 }
                 newBoard[i][j] = 2;
             }
-            if (board[i][j] == 3){
+            if (board[i][j] == 3 && eatingApple == 0){
                 newBoard[i][j] = 0;
                 switch(direction[i][j]){
                     case 1:
